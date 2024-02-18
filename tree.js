@@ -57,8 +57,8 @@ class Tree {
       return root.left;
     }
 
-    let succParent = root; // 2
-    let succ = root.right; // 3
+    let succParent = root;
+    let succ = root.right;
     while (succ.left !== null) {
       succParent = succ;
       succ = succ.left;

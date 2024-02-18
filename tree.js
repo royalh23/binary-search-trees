@@ -17,6 +17,59 @@ class Tree {
 
     return root;
   }
+
+  insert(value) {
+    this.root = this.insertRec(this.root, value);
+  }
+
+  insertRec(root, value) {
+    if (root === null) {
+      root = new Node(value);
+      return root;
+    }
+
+    if (value < root.data) root.left = this.insertRec(root.left, value);
+    else if (value > root.data) root.right = this.insertRec(root.right, value);
+
+    return root;
+  }
+
+  delete(value) {
+    this.root = this.deleteRec(this.root, value);
+  }
+
+  deleteRec(root, value) {
+    if (root === null) return root;
+
+    if (value < root.data) {
+      root.left = this.deleteRec(root.left, value);
+      return root;
+    }
+    if (value > root.data) {
+      root.right = this.deleteRec(root.right, value);
+      return root;
+    }
+
+    if (root.left === null) {
+      return root.right;
+    }
+    if (root.right === null) {
+      return root.left;
+    }
+
+    let succParent = root; // 2
+    let succ = root.right; // 3
+    while (succ.left !== null) {
+      succParent = succ;
+      succ = succ.left;
+    }
+    if (succParent !== root) succParent.left = succ.right;
+    else succParent.right = succ.right;
+
+    root.data = succ.data;
+
+    return root;
+  }
 }
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {

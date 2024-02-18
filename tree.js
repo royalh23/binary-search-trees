@@ -70,6 +70,20 @@ class Tree {
 
     return root;
   }
+
+  find(value) {
+    return this.findRec(this.root, value);
+  }
+
+  findRec(root, value) {
+    if (root === null) return root;
+
+    if (value < root.data) return this.findRec(root.left, value);
+    if (value > root.data) return this.findRec(root.right, value);
+    if (value === root.data) return root;
+
+    return null;
+  }
 }
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
@@ -84,3 +98,6 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
   }
 };
+
+const tree = new Tree([1, 2, 3, 4]);
+console.log(tree.find(0));

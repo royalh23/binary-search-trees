@@ -84,6 +84,25 @@ class Tree {
 
     return null;
   }
+
+  levelOrder(cb = null) {
+    if (this.root === null) return null;
+
+    const nodes = [];
+    const queue = [];
+    queue.unshift(this.root);
+
+    while (queue.length !== 0) {
+      const cur = queue.at(-1);
+      if (cb !== null) cb(cur);
+      else nodes.push(cur);
+      if (cur.left !== null) queue.unshift(cur.left);
+      if (cur.right !== null) queue.unshift(cur.right);
+      queue.pop();
+    }
+
+    if (cb === null) return nodes;
+  }
 }
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
@@ -98,6 +117,3 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
   }
 };
-
-const tree = new Tree([1, 2, 3, 4]);
-console.log(tree.find(0));

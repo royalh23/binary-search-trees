@@ -19,34 +19,34 @@ class Tree {
   }
 
   insert(value) {
-    this.root = this.insertRec(this.root, value);
+    this.root = this.#insertRec(this.root, value);
   }
 
-  insertRec(root, value) {
+  #insertRec(root, value) {
     if (root === null) {
       root = new Node(value);
       return root;
     }
 
-    if (value < root.data) root.left = this.insertRec(root.left, value);
-    else if (value > root.data) root.right = this.insertRec(root.right, value);
+    if (value < root.data) root.left = this.#insertRec(root.left, value);
+    else if (value > root.data) root.right = this.#insertRec(root.right, value);
 
     return root;
   }
 
   delete(value) {
-    this.root = this.deleteRec(this.root, value);
+    this.root = this.#deleteRec(this.root, value);
   }
 
-  deleteRec(root, value) {
-    if (root === null) return root;
+  #deleteRec(root, value) {
+    if (root === null) return null;
 
     if (value < root.data) {
-      root.left = this.deleteRec(root.left, value);
+      root.left = this.#deleteRec(root.left, value);
       return root;
     }
     if (value > root.data) {
-      root.right = this.deleteRec(root.right, value);
+      root.right = this.#deleteRec(root.right, value);
       return root;
     }
 
@@ -72,14 +72,14 @@ class Tree {
   }
 
   find(value) {
-    return this.findRec(this.root, value);
+    return this.#findRec(this.root, value);
   }
 
-  findRec(root, value) {
-    if (root === null) return root;
+  #findRec(root, value) {
+    if (root === null) return null;
 
-    if (value < root.data) return this.findRec(root.left, value);
-    if (value > root.data) return this.findRec(root.right, value);
+    if (value < root.data) return this.#findRec(root.left, value);
+    if (value > root.data) return this.#findRec(root.right, value);
     if (value === root.data) return root;
 
     return null;
@@ -103,6 +103,75 @@ class Tree {
 
     if (cb === null) return nodes;
   }
+
+  preOrder(cb = null) {
+    return this.#preOrderRec(this.root, cb);
+  }
+
+  #preOrderRec(root, cb = null) {
+    if (cb === null) {
+      if (root === null) return [];
+
+      const nodes = [];
+      nodes.push(root);
+      nodes.push(...this.#preOrderRec(root.left, cb));
+      nodes.push(...this.#preOrderRec(root.right, cb));
+
+      return nodes;
+    }
+
+    if (root === null) return null;
+
+    cb(root);
+    this.preOrderRec(root.left, cb);
+    this.preOrderRec(root.right, cb);
+  }
+
+  inOrder(cb = null) {
+    return this.#inOrderRec(this.root, cb);
+  }
+
+  #inOrderRec(root, cb = null) {
+    if (cb === null) {
+      if (root === null) return [];
+
+      const nodes = [];
+      nodes.push(...this.#inOrderRec(root.left, cb));
+      nodes.push(root);
+      nodes.push(...this.#inOrderRec(root.right, cb));
+
+      return nodes;
+    }
+
+    if (root === null) return null;
+
+    this.inOrderRec(root.left, cb);
+    cb(root);
+    this.inOrderRec(root.right, cb);
+  }
+
+  postOrder(cb = null) {
+    return this.#postOrderRec(this.root, cb);
+  }
+
+  #postOrderRec(root, cb = null) {
+    if (cb === null) {
+      if (root === null) return [];
+
+      const nodes = [];
+      nodes.push(...this.#postOrderRec(root.left, cb));
+      nodes.push(...this.#postOrderRec(root.right, cb));
+      nodes.push(root);
+
+      return nodes;
+    }
+
+    if (root === null) return null;
+
+    this.#postOrderRec(root.left, cb);
+    this.#postOrderRec(root.right, cb);
+    cb(root);
+  }
 }
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
@@ -117,3 +186,9 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
   }
 };
+
+const tree = new Tree([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+prettyPrint(tree.root);
+console.log(tree.preOrder((root) => console.log(root.data)));
+console.log(tree.inOrder((root) => console.log(root.data)));
+console.log(tree.postOrder((root) => console.log(root.data)));

@@ -173,23 +173,43 @@ class Tree {
     cb(root);
   }
 
-  height(root) {
-    if (root === null) return null;
+  height(node) {
+    if (node === null) return null;
 
     let heightL = 0;
     let heightR = 0;
 
-    if (root.left !== null) {
+    if (node.left !== null) {
       heightL += 1;
-      heightL += this.height(root.left);
+      heightL += this.height(node.left);
     }
-    if (root.right !== null) {
+    if (node.right !== null) {
       heightR += 1;
-      heightR += this.height(root.right);
+      heightR += this.height(node.right);
     }
 
     if (heightL > heightR) return heightL;
     return heightR;
+  }
+
+  depth(node) {
+    return this.#depthRec(this.root, node);
+  }
+
+  #depthRec(root, node) {
+    if (root === null || node === null) return null;
+
+    let depth = 0;
+
+    if (node.data < root.data) {
+      depth += 1;
+      depth += this.#depthRec(root.left, node);
+    } else if (node.data > root.data) {
+      depth += 1;
+      depth += this.#depthRec(root.right, node);
+    }
+
+    return depth;
   }
 }
 
@@ -208,3 +228,4 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 
 const tree = new Tree([1, 2, 3, 4]);
 prettyPrint(tree.root);
+console.log(tree.depth(tree.find(4)));

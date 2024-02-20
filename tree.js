@@ -123,8 +123,8 @@ class Tree {
     if (root === null) return null;
 
     cb(root);
-    this.preOrderRec(root.left, cb);
-    this.preOrderRec(root.right, cb);
+    this.#preOrderRec(root.left, cb);
+    this.#preOrderRec(root.right, cb);
   }
 
   inOrder(cb = null) {
@@ -145,9 +145,9 @@ class Tree {
 
     if (root === null) return null;
 
-    this.inOrderRec(root.left, cb);
+    this.#inOrderRec(root.left, cb);
     cb(root);
-    this.inOrderRec(root.right, cb);
+    this.#inOrderRec(root.right, cb);
   }
 
   postOrder(cb = null) {
@@ -172,6 +172,25 @@ class Tree {
     this.#postOrderRec(root.right, cb);
     cb(root);
   }
+
+  height(root) {
+    if (root === null) return null;
+
+    let heightL = 0;
+    let heightR = 0;
+
+    if (root.left !== null) {
+      heightL += 1;
+      heightL += this.height(root.left);
+    }
+    if (root.right !== null) {
+      heightR += 1;
+      heightR += this.height(root.right);
+    }
+
+    if (heightL > heightR) return heightL;
+    return heightR;
+  }
 }
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
@@ -187,8 +206,5 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 };
 
-const tree = new Tree([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+const tree = new Tree([1, 2, 3, 4]);
 prettyPrint(tree.root);
-console.log(tree.preOrder((root) => console.log(root.data)));
-console.log(tree.inOrder((root) => console.log(root.data)));
-console.log(tree.postOrder((root) => console.log(root.data)));

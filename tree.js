@@ -95,7 +95,7 @@ class Tree {
     while (queue.length !== 0) {
       const cur = queue.at(-1);
       if (cb !== null) cb(cur);
-      else nodes.push(cur);
+      else nodes.push(cur.data);
       if (cur.left !== null) queue.unshift(cur.left);
       if (cur.right !== null) queue.unshift(cur.right);
       queue.pop();
@@ -113,7 +113,7 @@ class Tree {
       if (root === null) return [];
 
       const nodes = [];
-      nodes.push(root);
+      nodes.push(root.data);
       nodes.push(...this.#preOrderRec(root.left, cb));
       nodes.push(...this.#preOrderRec(root.right, cb));
 
@@ -137,7 +137,7 @@ class Tree {
 
       const nodes = [];
       nodes.push(...this.#inOrderRec(root.left, cb));
-      nodes.push(root);
+      nodes.push(root.data);
       nodes.push(...this.#inOrderRec(root.right, cb));
 
       return nodes;
@@ -161,7 +161,7 @@ class Tree {
       const nodes = [];
       nodes.push(...this.#postOrderRec(root.left, cb));
       nodes.push(...this.#postOrderRec(root.right, cb));
-      nodes.push(root);
+      nodes.push(root.data);
 
       return nodes;
     }
@@ -211,6 +211,25 @@ class Tree {
 
     return depth;
   }
+
+  isBalanced() {
+    return this.#isBalancedRec(this.root);
+  }
+
+  #isBalancedRec(root) {
+    if (root === null) return true;
+
+    const heightL = this.height(root.left);
+    const heightR = this.height(root.right);
+
+    if (
+      Math.abs(heightL - heightR) <= 1 &&
+      this.#isBalancedRec(root.left) &&
+      this.#isBalancedRec(root.right)
+    )
+      return true;
+    return false;
+  }
 }
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
@@ -228,4 +247,4 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 
 const tree = new Tree([1, 2, 3, 4]);
 prettyPrint(tree.root);
-console.log(tree.depth(tree.find(4)));
+console.log(tree.isBalanced());

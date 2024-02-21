@@ -230,6 +230,10 @@ class Tree {
       return true;
     return false;
   }
+
+  rebalance() {
+    this.root = Tree.buildTree(this.inOrder());
+  }
 }
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
@@ -244,7 +248,3 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
   }
 };
-
-const tree = new Tree([1, 2, 3, 4]);
-prettyPrint(tree.root);
-console.log(tree.isBalanced());
